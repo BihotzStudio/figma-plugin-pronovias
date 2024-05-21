@@ -85,6 +85,7 @@
       <div class="status" id="status"></div>
     </div>
 
+    <script src="xlsx.full.min.js"></script>
     <script>
       document.getElementById("upload").addEventListener("change", function () {
         const file = this.files[0];
@@ -170,7 +171,7 @@
         reader.readAsBinaryString(file);
       });
     </script>
-    <script src="libs/xlsx.full.min.js"></script>
+
     <script src="code.js"></script>
   </body>
 </html>
