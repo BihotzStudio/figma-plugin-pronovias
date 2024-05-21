@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cargando...</title>
+    <script>
+      async function loadRemoteHtml() {
+        try {
+          const response = await fetch(
+            "https://BihotzStudio.github.io/figma-plugin-pronovias/src/remote/index.html"
+          );
+          if (!response.ok) throw new Error("Error al cargar el HTML remoto");
+          const htmlText = await response.text();
+          document.open();
+          document.write(htmlText);
+          document.close();
+        } catch (error) {
+          document.body.innerHTML = `<p style="color: red;">${error.message}</p>`;
+        }
+      }
+
+      loadRemoteHtml();
+    </script>
+  </head>
+  <body>
+    <p>Cargando...</p>
+  </body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plugin de Figma</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #ffffff;
+        color: #000000;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .container {
+        text-align: center;
+        padding: 20px;
+      }
+      h1 {
+        margin-bottom: 10px;
+        font-size: 24px;
+      }
+      p {
+        margin-bottom: 20px;
+        font-size: 16px;
+      }
+      .file-input,
+      .template-input,
+      .submit-input {
+        margin-bottom: 20px;
+      }
+      #upload {
+        display: none;
+      }
+      .custom-file-upload,
+      .custom-template-input,
+      .custom-submit-button {
+        display: inline-block;
+        padding: 10px 20px;
+        cursor: pointer;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        background-color: #ffffff;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .custom-template-input {
+        width: calc(100% - 44px); /* 100% width minus padding and border */
+        box-sizing: border-box;
+      }
+
+      .status {
+        margin-top: 20px;
+        font-size: 14px;
+      }
+      .error {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Campañas Pronovias</h1>
+      <p>Seleccione un archivo Excel para generar las distintas campañas</p>
+      <div class="template-input">
+        <label for="template-name">Nombre del template:</label>
+        <input
+          type="text"
+          id="template-name"
+          placeholder="Introduzca el nombre del template"
+          class="custom-template-input"
+        />
+      </div>
+      <div class="file-input">
+        <label for="upload" class="custom-file-upload"
+          >Seleccionar Archivo</label
+        >
+        <input type="file" id="upload" />
+      </div>
+      <div class="submit-input">
+        <button id="submit" class="custom-submit-button">Procesar</button>
+      </div>
+      <div class="status" id="status"></div>
+    </div>
+
+    <script>
+      document.getElementById("upload").addEventListener("change", function () {
+        const file = this.files[0];
+        if (file) {
+          document.querySelector(".custom-file-upload").textContent = file.name;
+        }
+      });
+
+      document.getElementById("submit").addEventListener("click", function () {
+        const fileInput = document.getElementById("upload");
+        const file = fileInput.files[0];
+        if (!file) {
+          document.getElementById("status").textContent =
+            "Por favor, seleccione un archivo válido";
+          return;
+        }
+
+        const templateName = document.getElementById("template-name").value;
+        if (!templateName) {
+          document.getElementById("status").textContent =
+            "Por favor, introduzca el nombre del template";
+          return;
+        }
+
+        console.log("Procesando archivo:", file);
+
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          const binaryData = e.target.result;
+          console.log("Archivo cargado:", binaryData);
+
+          const workbook = XLSX.read(binaryData, { type: "binary" });
+          const sheetName = workbook.SheetNames[0];
+          const sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
+            header: 1,
+          });
+
+          // Validar que el archivo tiene las columnas necesarias
+          const headers = sheet[0];
+          const requiredHeaders = [];
+          const missingHeaders = requiredHeaders.filter(
+            (header) => !headers.includes(header)
+          );
+
+          if (missingHeaders.length > 0) {
+            document.getElementById(
+              "status"
+            ).innerHTML = `<span class="error">Error: El archivo debe contener las siguientes columnas: ${missingHeaders.join(
+              ", "
+            )}.</span>`;
+            return;
+          }
+
+          // Leer la primera fila para obtener los tipos de texto
+          const parsedData = sheet.slice(1).map((row) => {
+            return {
+              language: row[headers.indexOf("Language")],
+              title1: row[headers.indexOf("Title1")],
+              title2: row[headers.indexOf("Title2")],
+              description1: row[headers.indexOf("Description1")],
+              description2: row[headers.indexOf("Description2")],
+              buttonText: row[headers.indexOf("ButtonText")],
+              campaign: row[headers.indexOf("Campaign")],
+            };
+          });
+
+          console.log("Datos parseados:", parsedData);
+
+          parent.postMessage(
+            {
+              pluginMessage: {
+                type: "create-frames",
+                data: parsedData,
+                templateName,
+              },
+            },
+            "*"
+          );
+
+          document.getElementById("status").textContent =
+            "Procesamiento completo.";
+        };
+        reader.readAsBinaryString(file);
+      });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="code.js"></script>
+  </body>
+</html>
