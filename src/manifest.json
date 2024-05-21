@@ -1,6 +1,6 @@
 {
-  "name": "Mi Plugin Privado",
-  "id": "mi-plugin-privado",
+  "name": "Bihotz Studio",
+  "id": "1374690218866786058",
   "api": "1.0.0",
   "main": "code.js",
   "ui": "ui.html",
@@ -9,6 +9,9 @@
     "allowedDomains": [
       "https://bihotzstudio.github.io/figma-plugin-pronovias/"
     ],
-    "devAllowedDomains": ["http://localhost:3000", "bihotzstudio.github.io"]
+    "devAllowedDomains": [
+      "http://localhost:3000",
+      "https://bihotzstudio.github.io/figma-plugin-pronovias/"
+    ]
   }
 }

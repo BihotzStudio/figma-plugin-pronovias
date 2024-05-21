@@ -3,6 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <title>Cargando...</title>
+
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+
+      .loader {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: inline-block;
+        border-top: 3px solid black;
+        border-right: 3px solid transparent;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+      }
+
+      @keyframes rotation {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+
     <script>
       async function loadRemoteHtml() {
         try {
@@ -23,6 +53,6 @@
     </script>
   </head>
   <body>
-    <div id="main"></div>
+    <span class="loader"></span>
   </body>
 </html>
