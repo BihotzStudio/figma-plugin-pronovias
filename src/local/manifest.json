@@ -1,8 +1,14 @@
 {
-  "name": "My Figma Plugin",
-  "id": "your-plugin-id",
+  "name": "Mi Plugin Privado",
+  "id": "mi-plugin-privado",
   "api": "1.0.0",
   "main": "code.js",
   "ui": "ui.html",
-  "editorType": ["figma"]
+  "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": [
+      "https://bihotzstudio.github.io/figma-plugin-pronovias/"
+    ],
+    "devAllowedDomains": ["http://localhost:3000", "bihotzstudio.github.io"]
+  }
 }

@@ -7,7 +7,7 @@
       async function loadRemoteHtml() {
         try {
           const response = await fetch(
-            "https://BihotzStudio.github.io/figma-plugin-pronovias/src/remote/index.html"
+            "https://bihotzstudio.github.io/figma-plugin-pronovias/"
           );
           if (!response.ok) throw new Error("Error al cargar el HTML remoto");
           const htmlText = await response.text();
