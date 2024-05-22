@@ -3,10 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Plugin de Figma</title>
     <style>
+      @font-face {
+        font-family: "FontMarkPro";
+        src: url("font-mark-pro.woff2") format("woff2");
+        font-weight: normal;
+        font-style: normal;
+      }
+
       body {
-        font-family: Arial, sans-serif;
+        font-family: "MiFuentePersonalizada", sans-serif;
         background-color: #ffffff;
         color: #000000;
         margin: 0;
@@ -23,12 +29,13 @@
 
       h1 {
         margin-bottom: 10px;
-        font-size: 24px;
+        font-size: 20px;
       }
 
       p {
         margin-bottom: 20px;
-        font-size: 16px;
+        font-size: 14px;
+        text-align: justify;
       }
 
       .file-input,
@@ -46,7 +53,7 @@
       .custom-submit-button {
         display: inline-block;
         padding: 10px 20px;
-        cursor: pointer;
+        font-family: "FontMarkPro";
         border: 1px solid #000000;
         background-color: #ffffff;
         transition: background-color 0.3s, color 0.3s;
@@ -66,6 +73,7 @@
         background-color: #000;
         color: #fff;
         width: 160px;
+        cursor: pointer;
       }
 
       .custom-file-upload {
@@ -74,11 +82,17 @@
         padding: 64px 16px;
         text-align: center;
         width: calc(100% - 34px);
+        cursor: pointer;
+      }
+
+      .uploaded {
+        color: #000 !important;
       }
 
       .status {
         margin-top: 20px;
         font-size: 14px;
+        text-align: center;
       }
 
       .error {
@@ -88,10 +102,10 @@
   </head>
   <body>
     <div class="container">
-      <h1>Campañas Pronovias</h1>
+      <h1>CAMPAÑAS PRONOVIAS</h1>
       <p>
         Selecciona el archivo de excel con las traducciones para generar las
-        distintas versiones por idioma.
+        distintas versiones por idioma y indica el frame que quieres copiar.
       </p>
       <div class="template-input">
         <input
@@ -120,8 +134,12 @@
           .addEventListener("change", function () {
             const file = this.files[0];
             if (file) {
-              document.querySelector(".custom-file-upload").textContent =
-                file.name;
+              const fileUploadElement = document.querySelector(
+                ".custom-file-upload"
+              );
+              fileUploadElement.className =
+                fileUploadElement.className + " uploaded";
+              fileUploadElement.textContent = file.name;
             }
           });
 
@@ -202,7 +220,7 @@
               );
 
               document.getElementById("status").textContent =
-                "Procesamiento completo.";
+                "Procesamiento completo";
             };
             reader.readAsBinaryString(file);
           });

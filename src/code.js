@@ -1,4 +1,4 @@
-figma.showUI(__html__, { width: 400, height: 400 });
+figma.showUI(__html__, { width: 500, height: 500 });
 
 figma.ui.onmessage = async (msg) => {
   if (msg.type === "create-frames") {
