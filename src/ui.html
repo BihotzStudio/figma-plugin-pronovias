@@ -11,26 +11,6 @@
         justify-content: center;
         height: 100vh;
       }
-
-      .loader {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        display: inline-block;
-        border-top: 3px solid black;
-        border-right: 3px solid transparent;
-        box-sizing: border-box;
-        animation: rotation 1s linear infinite;
-      }
-
-      @keyframes rotation {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
     </style>
 
     <script>
@@ -41,18 +21,23 @@
           );
           if (!response.ok) throw new Error("Error al cargar el HTML remoto");
           const htmlText = await response.text();
-          document.open();
-          document.write(htmlText);
-          document.close();
+          const container = document.createElement("div");
+          container.innerHTML = htmlText;
+          document.body.appendChild(container);
+
+          // Ejecutar scripts embebidos
+          container.querySelectorAll("script").forEach((script) => {
+            const newScript = document.createElement("script");
+            newScript.textContent = script.textContent;
+            document.body.appendChild(newScript);
+          });
         } catch (error) {
-          document.body.innerHTML = `<p>Error al cargar el plugin</p>`;
+          document.body.innerHTML = `<p style="color: red;">${error.message}</p>`;
         }
       }
 
       loadRemoteHtml();
     </script>
   </head>
-  <body>
-    <span class="loader"></span>
-  </body>
+  <body></body>
 </html>
