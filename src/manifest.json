@@ -6,12 +6,6 @@
   "ui": "ui.html",
   "editorType": ["figma"],
   "networkAccess": {
-    "allowedDomains": [
-      "https://bihotzstudio.github.io/figma-plugin-pronovias/"
-    ],
-    "devAllowedDomains": [
-      "http://localhost:3000",
-      "https://bihotzstudio.github.io/figma-plugin-pronovias/"
-    ]
+    "allowedDomains": ["https://bihotzstudio.github.io/figma-plugin-pronovias/"]
   }
 }

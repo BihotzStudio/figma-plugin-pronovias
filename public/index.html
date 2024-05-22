@@ -162,12 +162,9 @@
               return;
             }
 
-            console.log("Procesando archivo:", file);
-
             const reader = new FileReader();
             reader.onload = async (e) => {
               const binaryData = e.target.result;
-              console.log("Archivo cargado:", binaryData);
 
               const workbook = XLSX.read(binaryData, { type: "binary" });
               const sheetName = workbook.SheetNames[0];
@@ -206,8 +203,6 @@
                   campaign: row[headers.indexOf("Campaign")],
                 };
               });
-
-              console.log("Datos parseados:", parsedData);
 
               parent.postMessage(
                 {

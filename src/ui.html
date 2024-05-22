@@ -4,15 +4,6 @@
     <meta charset="UTF-8" />
     <title>Cargando...</title>
 
-    <style>
-      body {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-      }
-    </style>
-
     <script>
       async function loadRemoteHtml() {
         try {
@@ -21,18 +12,11 @@
           );
           if (!response.ok) throw new Error("Error al cargar el HTML remoto");
           const htmlText = await response.text();
-          const container = document.createElement("div");
-          container.innerHTML = htmlText;
-          document.body.appendChild(container);
-
-          // Ejecutar scripts embebidos
-          container.querySelectorAll("script").forEach((script) => {
-            const newScript = document.createElement("script");
-            newScript.textContent = script.textContent;
-            document.body.appendChild(newScript);
-          });
+          document.open();
+          document.write(htmlText);
+          document.close();
         } catch (error) {
-          document.body.innerHTML = `<p style="color: red;">${error.message}</p>`;
+          document.body.innerHTML = `<p>Error al cargar el plugin</p>`;
         }
       }
 
