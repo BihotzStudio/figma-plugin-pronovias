@@ -23,8 +23,9 @@ body {
 }
 
 h1 {
+  margin-top: 32px;
   margin-bottom: 10px;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 p {
@@ -92,4 +93,9 @@ p {
 
 .error {
   color: red;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
 }
