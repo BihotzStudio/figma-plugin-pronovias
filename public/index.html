@@ -3,104 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      @font-face {
-        font-family: "FontMarkPro";
-        src: url("https://bihotzstudio.github.io/figma-plugin-pronovias/font-mark-pro.woff2")
-          format("woff2");
-        font-weight: normal;
-        font-style: normal;
-      }
-
-      body {
-        font-family: "FontMarkPro", helvetica;
-        background-color: #ffffff;
-        color: #000000;
-        margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      }
-
-      .container {
-        text-align: left;
-        padding: 20px;
-      }
-
-      h1 {
-        margin-bottom: 10px;
-        font-size: 20px;
-      }
-
-      p {
-        margin-bottom: 20px;
-        font-size: 14px;
-        text-align: justify;
-      }
-
-      .file-input,
-      .template-input,
-      .submit-input {
-        margin-bottom: 20px;
-      }
-
-      #upload {
-        display: none;
-      }
-
-      .custom-file-upload,
-      .custom-template-input,
-      .custom-submit-button {
-        display: inline-block;
-        padding: 10px 20px;
-        font-family: "FontMarkPro", helvetica;
-        border: 1px solid #000000;
-        background-color: #ffffff;
-        transition: background-color 0.3s, color 0.3s;
-      }
-
-      .submit-input {
-        display: flex;
-        justify-content: center;
-      }
-
-      .custom-template-input {
-        width: 100%;
-        box-sizing: border-box;
-      }
-
-      .custom-submit-button {
-        background-color: #000;
-        color: #fff;
-        width: 160px;
-        cursor: pointer;
-      }
-
-      .custom-file-upload {
-        border: 1px dashed #000000;
-        color: #cccccc;
-        padding: 64px 16px;
-        text-align: center;
-        width: calc(100% - 34px);
-        cursor: pointer;
-      }
-
-      .uploaded {
-        color: #000 !important;
-      }
-
-      .status {
-        margin-top: 20px;
-        font-size: 14px;
-        text-align: center;
-      }
-
-      .error {
-        color: red;
-      }
-    </style>
-    <script src="https://bihotzstudio.github.io/figma-plugin-pronovias/xlsx.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://bihotzstudio.github.io/figma-plugin-pronovias/styles.css"
+    />
+    <script src="https://bihotzstudio.github.io/figma-plugin-pronovias/libs/xlsx.min.js"></script>
   </head>
   <body>
     <div class="container">
@@ -129,73 +36,6 @@
       <div class="status" id="status"></div>
     </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const uploadInput = document.getElementById("upload");
-        const fileLabel = document.querySelector(".custom-file-upload");
-        const submitButton = document.getElementById("submit");
-        const status = document.getElementById("status");
-
-        uploadInput.addEventListener("change", function () {
-          const file = this.files[0];
-          if (file) {
-            fileLabel.classList.add("uploaded");
-            fileLabel.textContent = file.name;
-          }
-        });
-
-        submitButton.addEventListener("click", function () {
-          const file = uploadInput.files[0];
-          if (!file) {
-            status.textContent = "Por favor, seleccione un archivo válido";
-            return;
-          }
-
-          const templateName = document.getElementById("template-name").value;
-          if (!templateName) {
-            status.textContent = "Por favor, introduzca el nombre del template";
-            return;
-          }
-
-          const reader = new FileReader();
-          reader.onload = async (e) => {
-            const binaryData = e.target.result;
-            const workbook = XLSX.read(binaryData, { type: "binary" });
-            const sheetName = workbook.SheetNames[0];
-            const sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
-              header: 1,
-            });
-
-            const campaignName = sheet[0][0];
-            const languages = sheet[0].slice(1);
-            const types = sheet.slice(1).map((row) => row[0]);
-            const data = {};
-
-            languages.forEach((lang, langIndex) => {
-              const langData = {};
-              sheet.slice(1).forEach((row, rowIndex) => {
-                langData[types[rowIndex]] = row[langIndex + 1];
-              });
-              data[lang] = langData;
-            });
-
-            parent.postMessage(
-              {
-                pluginMessage: {
-                  type: "create-frames",
-                  data,
-                  campaignName,
-                  templateName,
-                },
-              },
-              "*"
-            );
-
-            status.textContent = "Procesamiento completo";
-          };
-          reader.readAsBinaryString(file);
-        });
-      });
-    </script>
+    <script src="https://bihotzstudio.github.io/figma-plugin-pronovias/scripts/main.js"></script>
   </body>
 </html>
