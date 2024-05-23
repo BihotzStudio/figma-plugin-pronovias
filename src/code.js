@@ -4,45 +4,58 @@ figma.ui.onmessage = async (msg) => {
   if (msg.type === "create-frames") {
     const { data, campaignName, templateName } = msg;
 
-    // Buscar el frame llamado según el nombre del template proporcionado por el usuario
     const templateFrame = figma.currentPage.findOne(
       (node) => node.name === templateName && node.type === "FRAME"
     );
 
     if (!templateFrame) {
       figma.notify(`Template frame named "${templateName}" not found`);
-      return;
+
+      return null;
     }
 
-    // Iterar sobre cada idioma y crear un frame debajo del anterior
-    let offsetY = templateFrame.y + templateFrame.height + 50; // Espacio vertical entre frames
+    let offsetY = templateFrame.y + templateFrame.height + 50;
 
     for (const [language, textData] of Object.entries(data)) {
-      const newFrame = templateFrame.clone();
-      newFrame.x = templateFrame.x;
-      newFrame.y = offsetY;
-      newFrame.name = `${campaignName}_${language}`; // Configurar el nombre del frame con el idioma y campaña
+      const newFrame = createFrame(
+        templateFrame,
+        offsetY,
+        `${campaignName}_${language}`
+      );
 
-      // Buscar y reemplazar los textos dentro del nuevo frame
-      for (const [textType, textValue] of Object.entries(textData)) {
-        const node = newFrame.findOne(
-          (n) => n.name === textType && n.type === "TEXT"
-        );
-        if (node && textValue) {
-          await figma.loadFontAsync(node.fontName);
-          node.characters = textValue;
-        }
-      }
+      await replaceTextsInFrame(newFrame, textData);
 
-      // Actualizar el offset para el siguiente frame
       offsetY += newFrame.height + 50;
 
-      // Agregar el nuevo frame a la página actual
       figma.currentPage.appendChild(newFrame);
     }
 
-    // Notificar al usuario que la operación ha sido completada
     figma.notify("Frames created successfully");
     figma.closePlugin();
   }
 };
+
+function createFrame(templateFrame, yPosition, frameName) {
+  const newFrame = templateFrame.clone();
+  newFrame.x = templateFrame.x;
+  newFrame.y = yPosition;
+  newFrame.name = frameName;
+
+  return newFrame;
+}
+
+async function replaceTextsInFrame(frame, textData) {
+  for (const [textType, textValue] of Object.entries(textData)) {
+    const node = frame.findOne((n) => n.name === textType && n.type === "TEXT");
+
+    if (node && textValue) {
+      try {
+        await figma.loadFontAsync(node.fontName);
+      } catch (e) {
+        figma.notify("Error on load font");
+      }
+
+      node.characters = textValue;
+    }
+  }
+}

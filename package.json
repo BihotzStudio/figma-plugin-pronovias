@@ -1,15 +1,15 @@
 {
-  "name": "mi-plugin-figma",
+  "name": "figma-plugin-pronovias",
   "version": "1.0.0",
   "description": "Un plugin de Figma para Pronovias",
-  "main": "src/remote/index.html",
+  "main": "public/index.html",
   "scripts": {
     "start": "echo 'No start script defined'",
     "build": "echo 'No build script defined'"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/BihotzStudio/mi-plugin-figma.git"
+    "url": "https://github.com/BihotzStudio/figma-plugin-pronovias.git"
   },
   "keywords": [
     "figma",
@@ -17,6 +17,6 @@
     "excel",
     "campañas"
   ],
-  "author": "Bihotz Studio S.L",
+  "author": "Bihotz Studio S.L.",
   "license": "MIT"
 }

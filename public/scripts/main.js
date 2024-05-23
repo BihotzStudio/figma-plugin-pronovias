@@ -1,57 +1,53 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const uploadInput = document.getElementById("upload");
   const fileLabel = document.querySelector(".custom-file-upload");
   const submitButton = document.getElementById("submit");
   const status = document.getElementById("status");
 
-  uploadInput.addEventListener("change", function () {
-    const file = this.files[0];
-    if (file) {
-      fileLabel.classList.add("uploaded");
-      fileLabel.textContent = file.name;
-    }
-  });
+  const updateFileLabel = (file) => {
+    fileLabel.classList.add("uploaded");
+    fileLabel.textContent = file.name;
+  };
 
-  submitButton.addEventListener("click", function () {
-    const file = uploadInput.files[0];
-    if (!file) {
-      status.textContent = "Por favor, seleccione un archivo válido";
-      return;
-    }
+  const showStatus = (message) => {
+    status.textContent = message;
+  };
 
-    const templateName = document.getElementById("template-name").value;
-    if (!templateName) {
-      status.textContent = "Por favor, introduzca el nombre del template";
-      return;
-    }
+  const calculateDataObj = (sheet) => {
+    const [campaignName, ...languages] = sheet[0];
+    const types = sheet.slice(1).map((row) => row[0]);
 
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const binaryData = e.target.result;
-      const workbook = XLSX.read(binaryData, { type: "binary" });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
-        header: 1,
-      });
-
-      const campaignName = sheet[0][0];
-      const languages = sheet[0].slice(1);
-      const types = sheet.slice(1).map((row) => row[0]);
-      const data = {};
-
-      languages.forEach((lang, langIndex) => {
-        const langData = {};
-        sheet.slice(1).forEach((row, rowIndex) => {
+    return {
+      campaignName,
+      dataObj: languages.reduce((acc, lang, langIndex) => {
+        acc[lang] = sheet.slice(1).reduce((langData, row, rowIndex) => {
           langData[types[rowIndex]] = row[langIndex + 1];
-        });
-        data[lang] = langData;
-      });
+
+          return langData;
+        }, {});
+
+        return acc;
+      }, {}),
+    };
+  };
+
+  const processFile = (file, templateName) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheet = XLSX.utils.sheet_to_json(
+        workbook.Sheets[workbook.SheetNames[0]],
+        { header: 1 }
+      );
+
+      const { campaignName, dataObj } = calculateDataObj(sheet);
 
       parent.postMessage(
         {
           pluginMessage: {
             type: "create-frames",
-            data,
+            data: dataObj,
             campaignName,
             templateName,
           },
@@ -59,8 +55,32 @@ document.addEventListener("DOMContentLoaded", function () {
         "*"
       );
 
-      status.textContent = "Procesamiento completo";
+      showStatus("Procesamiento completo");
     };
-    reader.readAsBinaryString(file);
+    reader.readAsArrayBuffer(file);
+  };
+
+  uploadInput.addEventListener("change", function () {
+    if (this.files[0]) {
+      updateFileLabel(this.files[0]);
+    }
+  });
+
+  submitButton.addEventListener("click", () => {
+    const file = uploadInput.files[0];
+    if (!file) {
+      showStatus("Por favor, seleccione un archivo válido");
+
+      return null;
+    }
+
+    const templateName = document.getElementById("template-name").value;
+    if (!templateName) {
+      showStatus("Por favor, introduzca el nombre del template");
+
+      return null;
+    }
+
+    processFile(file, templateName);
   });
 });

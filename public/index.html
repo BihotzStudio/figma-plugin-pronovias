@@ -7,42 +7,42 @@
       rel="stylesheet"
       href="https://bihotzstudio.github.io/figma-plugin-pronovias/styles.css"
     />
-    <script src="https://bihotzstudio.github.io/figma-plugin-pronovias/libs/xlsx.min.js"></script>
+    <script
+      src="https://bihotzstudio.github.io/figma-plugin-pronovias/libs/xlsx.min.js"
+      defer
+    ></script>
   </head>
   <body>
     <div class="container">
-      <div class="image-container">
-        <img
-          src="https://bihotzstudio.github.io/figma-plugin-pronovias/images/logo-bihotz-studio.png"
-          alt="Bihotz Studio"
-        />
-      </div>
+      <img
+        src="https://bihotzstudio.github.io/figma-plugin-pronovias/images/logo-bihotz-studio.png"
+        alt="Bihotz Studio"
+        class="logo"
+      />
 
       <h1>CAMPAÑAS PRONOVIAS</h1>
       <p>
         Selecciona el archivo de excel con las traducciones para generar las
         distintas versiones por idioma y indica el frame que quieres copiar.
       </p>
-      <div class="template-input">
-        <input
-          type="text"
-          id="template-name"
-          placeholder="Introduzca el nombre del frame a copiar"
-          class="custom-template-input"
-        />
-      </div>
-      <div class="file-input">
-        <label for="upload" class="custom-file-upload"
-          >Seleccionar archivo</label
-        >
-        <input type="file" id="upload" />
-      </div>
-      <div class="submit-input">
-        <button id="submit" class="custom-submit-button">Procesar</button>
-      </div>
+
+      <input
+        type="text"
+        id="template-name"
+        placeholder="Introduzca el nombre del frame a copiar"
+        class="custom-template-input"
+      />
+
+      <label for="upload" class="custom-file-upload">Seleccionar archivo</label>
+      <input type="file" id="upload" />
+
+      <button id="submit" class="custom-submit-button">Procesar</button>
+
       <div class="status" id="status"></div>
     </div>
-
-    <script src="https://bihotzstudio.github.io/figma-plugin-pronovias/scripts/main.js"></script>
+    <script
+      src="https://bihotzstudio.github.io/figma-plugin-pronovias/scripts/main.js"
+      defer
+    ></script>
   </body>
 </html>
