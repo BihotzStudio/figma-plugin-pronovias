@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const processFile = (file, templateName) => {
     const reader = new FileReader();
+
     reader.onload = (e) => {
       const data = new Uint8Array(e.target.result);
       const workbook = XLSX.read(data, { type: "array" });
@@ -57,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       showStatus("Procesamiento completo");
     };
+
     reader.readAsArrayBuffer(file);
   };
 
@@ -68,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   submitButton.addEventListener("click", () => {
     const file = uploadInput.files[0];
+
     if (!file) {
       showStatus("Por favor, seleccione un archivo válido");
 
@@ -75,6 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const templateName = document.getElementById("template-name").value;
+
     if (!templateName) {
       showStatus("Por favor, introduzca el nombre del template");
 
